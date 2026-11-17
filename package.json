@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {
     "@fontsource-variable/newsreader": "^5.1.1",
