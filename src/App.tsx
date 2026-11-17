@@ -1,12 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './styles/global.css';
 import { TradeDataset } from './types/data';
 import { AppShell } from './components/layout/AppShell';
+import { useFilters } from './lib/filterStore';
+import {
+  filterIndices,
+  computeCoreAggregates,
+  computeYearAggregates,
+  computeAreaAggregates,
+  computeItemAggregates
+} from './lib/aggregation';
+import { Page01TradeOverview } from './pages/Page01TradeOverview';
+import { Page02AreaAnalysis } from './pages/Page02AreaAnalysis';
+import { Page03ProductAnalysis } from './pages/Page03ProductAnalysis';
 
 export default function App(): React.ReactElement {
   const [dataset, setDataset] = useState<TradeDataset | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filters] = useFilters();
 
   useEffect(() => {
     fetch('/data/trade.json')
@@ -24,6 +36,65 @@ export default function App(): React.ReactElement {
       });
   }, []);
 
+  // Aggregated data memoised on filter changes
+  const activeIndices = useMemo(() => {
+    if (!dataset) return [];
+    return filterIndices(dataset, filters);
+  }, [dataset, filters]);
+
+  const core = useMemo(() => {
+    if (!dataset) return null;
+    return computeCoreAggregates(dataset, activeIndices);
+  }, [dataset, activeIndices]);
+
+  const yearAggs = useMemo(() => {
+    if (!dataset) return [];
+    return computeYearAggregates(dataset, filters);
+  }, [dataset, filters]);
+
+  const areaAggs = useMemo(() => {
+    if (!dataset || !core) return [];
+    return computeAreaAggregates(dataset, activeIndices, core.exportValueBn);
+  }, [dataset, activeIndices, core]);
+
+  const itemAggs = useMemo(() => {
+    if (!dataset || !core) return [];
+    return computeItemAggregates(dataset, activeIndices, core.exportValueBn, filters);
+  }, [dataset, activeIndices, core, filters]);
+
+  const renderPage = (activePageId: string) => {
+    if (!dataset || !core) return null;
+
+    if (activeIndices.length === 0) {
+      return (
+        <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--muted-ink)' }}>
+          <p style={{ fontSize: '16px', fontFamily: 'var(--font-serif)' }}>
+            No records matched the selected filter combination.
+          </p>
+          <p style={{ fontSize: '13px', marginTop: '8px' }}>
+            Adjust the year range, country, or commodity selection to view data.
+          </p>
+        </div>
+      );
+    }
+
+    switch (activePageId) {
+      case '01':
+        return <Page01TradeOverview dataset={dataset} core={core} yearAggs={yearAggs} />;
+      case '02':
+        return <Page02AreaAnalysis areaAggs={areaAggs} />;
+      case '03':
+        return <Page03ProductAnalysis itemAggs={itemAggs} />;
+      default:
+        return (
+          <div>
+            <h1 className="page-title">Page {activePageId}</h1>
+            <p className="page-finding">Overview of agricultural trade data.</p>
+          </div>
+        );
+    }
+  };
+
   return (
     <AppShell
       dataset={dataset}
@@ -31,12 +102,7 @@ export default function App(): React.ReactElement {
       error={error}
       onOpenMeasures={() => console.log('Open measures')}
     >
-      {(activePageId) => (
-        <div>
-          <h1 className="page-title">Page {activePageId}</h1>
-          <p className="page-finding">Overview of agricultural trade data.</p>
-        </div>
-      )}
+      {(activePageId) => renderPage(activePageId)}
     </AppShell>
   );
 }
