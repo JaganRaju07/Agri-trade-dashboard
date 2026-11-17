@@ -21,6 +21,9 @@ import { Page06QuantityAnalysis } from './pages/Page06QuantityAnalysis';
 import { Page07GrowthAndShare } from './pages/Page07GrowthAndShare';
 import { Page08TradeComposition } from './pages/Page08TradeComposition';
 import { Page09AreaTradePosition } from './pages/Page09AreaTradePosition';
+import { Page10ImportAnalysis } from './pages/Page10ImportAnalysis';
+import { Page11AreaTrends } from './pages/Page11AreaTrends';
+import { Page12ProductDeepDive } from './pages/Page12ProductDeepDive';
 
 export default function App(): React.ReactElement {
   const [dataset, setDataset] = useState<TradeDataset | null>(null);
@@ -123,6 +126,19 @@ export default function App(): React.ReactElement {
         return <Page08TradeComposition areaAggs={areaAggs} />;
       case '09':
         return <Page09AreaTradePosition areaAggs={areaAggs} />;
+      case '10':
+        return (
+          <Page10ImportAnalysis
+            core={core}
+            yearAggs={yearAggs}
+            areaAggs={areaAggs}
+            itemAggs={itemAggs}
+          />
+        );
+      case '11':
+        return <Page11AreaTrends yearAggs={yearAggs} matrixData={matrixData} />;
+      case '12':
+        return <Page12ProductDeepDive areaAggs={areaAggs} itemAggs={itemAggs} />;
       default:
         return (
           <div>
