@@ -24,11 +24,13 @@ import { Page09AreaTradePosition } from './pages/Page09AreaTradePosition';
 import { Page10ImportAnalysis } from './pages/Page10ImportAnalysis';
 import { Page11AreaTrends } from './pages/Page11AreaTrends';
 import { Page12ProductDeepDive } from './pages/Page12ProductDeepDive';
+import { MeasuresDrawer } from './components/ui/MeasuresDrawer';
 
 export default function App(): React.ReactElement {
   const [dataset, setDataset] = useState<TradeDataset | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [measuresOpen, setMeasuresOpen] = useState(false);
   const [filters] = useFilters();
 
   useEffect(() => {
@@ -150,13 +152,19 @@ export default function App(): React.ReactElement {
   };
 
   return (
-    <AppShell
-      dataset={dataset}
-      loading={loading}
-      error={error}
-      onOpenMeasures={() => console.log('Open measures')}
-    >
-      {(activePageId) => renderPage(activePageId)}
-    </AppShell>
+    <>
+      <AppShell
+        dataset={dataset}
+        loading={loading}
+        error={error}
+        onOpenMeasures={() => setMeasuresOpen(true)}
+      >
+        {(activePageId) => renderPage(activePageId)}
+      </AppShell>
+      <MeasuresDrawer
+        isOpen={measuresOpen}
+        onClose={() => setMeasuresOpen(false)}
+      />
+    </>
   );
 }
