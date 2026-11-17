@@ -97,3 +97,10 @@ export interface QualityAggregate {
   valueBn: number;
   sharePct: number;
 }
+export interface AreaYearCell {
+  area: string;
+  year: number;
+  exportValueBn: number;
+  importValueBn: number;
+  tradeBalanceBn: number;
+}

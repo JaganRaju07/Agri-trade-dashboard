@@ -9,7 +9,8 @@ import {
   computeYearAggregates,
   computeAreaAggregates,
   computeItemAggregates,
-  computeQualityAggregates
+  computeQualityAggregates,
+  computeAreaYearMatrix
 } from './lib/aggregation';
 import { Page01TradeOverview } from './pages/Page01TradeOverview';
 import { Page02AreaAnalysis } from './pages/Page02AreaAnalysis';
@@ -17,6 +18,9 @@ import { Page03ProductAnalysis } from './pages/Page03ProductAnalysis';
 import { Page04TradeBalance } from './pages/Page04TradeBalance';
 import { Page05DataQuality } from './pages/Page05DataQuality';
 import { Page06QuantityAnalysis } from './pages/Page06QuantityAnalysis';
+import { Page07GrowthAndShare } from './pages/Page07GrowthAndShare';
+import { Page08TradeComposition } from './pages/Page08TradeComposition';
+import { Page09AreaTradePosition } from './pages/Page09AreaTradePosition';
 
 export default function App(): React.ReactElement {
   const [dataset, setDataset] = useState<TradeDataset | null>(null);
@@ -71,6 +75,11 @@ export default function App(): React.ReactElement {
     return computeQualityAggregates(dataset, activeIndices);
   }, [dataset, activeIndices]);
 
+  const matrixData = useMemo(() => {
+    if (!dataset) return [];
+    return computeAreaYearMatrix(dataset, activeIndices);
+  }, [dataset, activeIndices]);
+
   const renderPage = (activePageId: string) => {
     if (!dataset || !core) return null;
 
@@ -100,6 +109,20 @@ export default function App(): React.ReactElement {
         return <Page05DataQuality core={core} yearAggs={yearAggs} qualityAggs={qualityAggs} />;
       case '06':
         return <Page06QuantityAnalysis core={core} yearAggs={yearAggs} itemAggs={itemAggs} />;
+      case '07':
+        return (
+          <Page07GrowthAndShare
+            core={core}
+            yearAggs={yearAggs}
+            areaAggs={areaAggs}
+            itemAggs={itemAggs}
+            matrixData={matrixData}
+          />
+        );
+      case '08':
+        return <Page08TradeComposition areaAggs={areaAggs} />;
+      case '09':
+        return <Page09AreaTradePosition areaAggs={areaAggs} />;
       default:
         return (
           <div>

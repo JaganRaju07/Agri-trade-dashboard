@@ -5,8 +5,11 @@ import {
   YearAggregate,
   AreaAggregate,
   ItemAggregate,
-  QualityAggregate
+  QualityAggregate,
+  AreaYearCell
 } from '../types/data';
+
+export type { AreaYearCell };
 
 // Fast index lookup cache
 interface DatasetIndexMap {
@@ -524,14 +527,6 @@ export function computeQualityAggregates(
 /**
  * Compute Area × Year matrix for heatmaps and ribbon charts.
  */
-export interface AreaYearCell {
-  area: string;
-  year: number;
-  exportValueBn: number;
-  importValueBn: number;
-  tradeBalanceBn: number;
-}
-
 export function computeAreaYearMatrix(
   dataset: TradeDataset,
   indices: number[]
