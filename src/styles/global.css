@@ -1,0 +1,145 @@
+@import '@fontsource-variable/newsreader/index.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import './tokens.css';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-width: 1280px;
+  min-height: 100vh;
+}
+
+/* Tabular figures for all numbers */
+.mono, .tabular-nums {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' on, 'zero' on;
+}
+
+/* Base button and inputs */
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+}
+
+input, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hairline-dark);
+  border-radius: 2px;
+}
+
+/* Clean cards without shadows or glass */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-subtle);
+  padding: 16px 20px;
+}
+
+/* Editorial section title */
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.page-finding {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--muted-ink);
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+/* Grid layout for cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Table styling */
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ledger-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--hairline-dark);
+  font-weight: 500;
+  color: var(--muted-ink);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ledger-table th.num, .ledger-table td.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' on;
+}
+
+.ledger-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink);
+}
+
+.ledger-table tr:hover td {
+  background-color: rgba(47, 93, 69, 0.04);
+}
+
+/* Tooltip container */
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 2px;
+  box-shadow: none;
+  border: 1px solid var(--ink);
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+/* Transitions for SVG mark elements */
+svg rect, svg circle, svg path {
+  transition: opacity 180ms ease-out, fill 180ms ease-out;
+}
